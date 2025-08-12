@@ -10,7 +10,6 @@ public class UserController(IUserService userService) : BaseController
 {
     public IActionResult Create(CreateUserRequest request)
     {
-        // TODO: validate the user
         var result = userService.Create(request);
         return FromResult(result);
     }
