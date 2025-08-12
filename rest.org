@@ -1,0 +1,3 @@
+* rest :verb:
+
+get http://localhost:5215/weatherforecast
