@@ -3,12 +3,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BarclaysCodingTest.Database;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext(IConfiguration configuration) : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<UserEntity>().ToTable("users");
+        new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<UserEntity>());
     }
 
-    public DbSet<UserEntity> users { get; set; }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+    }
+
+    public DbSet<UserEntity> Users { get; set; } = null!;
 }
