@@ -1,3 +1,15 @@
 * rest :verb:
 
-get http://localhost:5215/weatherforecast
+** create
+
+post http://localhost:5215/users
+content-type: application/json
+
+{
+  "name": "jacob",
+  "password": "securePassword"
+}
+
+** get
+
+get http://localhost:5215/users/01989fe8-f363-7c0d-badf-1a5c5d544b5c

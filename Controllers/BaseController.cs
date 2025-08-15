@@ -7,23 +7,13 @@ namespace BarclaysCodingTest.Controllers;
 [Route("api/[controller]")]
 public class BaseController : ControllerBase
 {
-    public IActionResult FromResult<T>(Result<T> result)
+    public IActionResult FromError(Error error)
     {
-        return result.Error?.Type switch
+        return error.Type switch
         {
-            null => Ok(result.Value),
-            _ => FromResult(result.Error)
-        };
-    }
-
-    public IActionResult FromResult(Result result)
-    {
-        return result.Error?.Type switch
-        {
-            null => Ok(),
-            ErrorType.NotFound => NotFound(result.Error.Description),
-            ErrorType.Validation => BadRequest(result.Error.Description),
-            _ => StatusCode(500, result.Error?.Description)
+            ErrorType.NotFound => NotFound(error.Description),
+            ErrorType.Validation => BadRequest(error.Description),
+            _ => StatusCode(500, error.Description)
         };
     }
 }

@@ -1,9 +1,9 @@
 * todo
 
+- create user endpoint
 - create jwt
 - store encrypted password in db
   password can be sent in plaintext as long as https is used
-- postgres in docker compose
 - entity framework
 - unit test
 - write readme

@@ -5,5 +5,7 @@ namespace BarclaysCodingTest.Services;
 
 public interface IUserService
 {
-    public Result<CreateUserResponse> Create(CreateUserRequest request);
+    Task<Result<CreateUserResponse>> Create(CreateUserRequest request);
+    Result<CreateUserResponse> Get(Guid id);
+    Task<Result<LoginUserResponse>> Login(LoginUserRequest request);
 }

@@ -2,13 +2,10 @@ namespace BarclaysCodingTest.Utilities;
 
 public record Result
 {
-    public bool IsSuccess { get; }
-    
     public Error? Error { get; }
 
     protected Result(bool isSuccess, Error? error)
     {
-        IsSuccess = isSuccess;
         Error = error;
     }
 
@@ -39,16 +36,10 @@ public record Error(string Id, ErrorType Type, string Description);
 
 public static class Errors
 {
-    public static Error UserRequiredDataMissing = new(
-        "UserRequiredDataMissing",
-        ErrorType.Validation,
-        "Required data missing from create user request."
-    );
-    
-    public static Error InsufficientFunds = new(
-        "InsufficientFunds",
-        ErrorType.Validation,
-        "Insufficient balance."
+    public static Error UserNotFound(Guid id) => new(
+        "UserNotFound",
+        ErrorType.NotFound,
+        $"User with id \"{id.ToString()}\" not found"
     );
 }
 
