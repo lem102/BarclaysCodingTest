@@ -1,3 +1,5 @@
+using BarclaysCodingTest.Dtos;
+
 namespace BarclaysCodingTest.Utilities;
 
 public record Result
@@ -36,11 +38,27 @@ public record Error(string Id, ErrorType Type, string Description);
 
 public static class Errors
 {
+    public static Error UsernameUnavailable = new(
+        "UsernameUnavailable",
+        ErrorType.Validation,
+        "User name is unavailable"
+    );
+
     public static Error UserNotFound(Guid id) => new(
         "UserNotFound",
         ErrorType.NotFound,
         $"User with id \"{id.ToString()}\" not found"
     );
+
+    public static Error IncorrectLoginDetails() => new(
+        "IncorrectLoginDetails",
+        ErrorType.Validation,
+        "Login details provided are incorrect"
+    );
+
+    internal static Error UserUnauthorized(Guid id)
+        => new("UserUnauthorized", ErrorType.Unauthorized, $"User with id '{id}' is unauthorized");
+    
 }
 
 

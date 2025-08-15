@@ -20,7 +20,7 @@ public class UsersController(IUserService userService) : BaseController
             return FromError(error);
         }
 	
-        return StatusCode(201, result);
+        return StatusCode(201, result.Value);
     }
 
     [Authorize]
@@ -34,19 +34,6 @@ public class UsersController(IUserService userService) : BaseController
             return FromError(error);
         }
 
-        return Ok(result);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> Login(LoginUserRequest request)
-    {
-	var result = await userService.Login(request);
-
-	if (result.Error is Error error)
-        {
-            return FromError(error);
-        }
-
-        return Ok(result);
+        return Ok(result.Value);
     }
 }

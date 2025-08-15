@@ -23,6 +23,12 @@ namespace BarclaysCodingTest.Migrations
                 {
                     table.PrimaryKey("PK_users", x => x.id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_users_name",
+                table: "users",
+                column: "name",
+                unique: true);
         }
 
         /// <inheritdoc />

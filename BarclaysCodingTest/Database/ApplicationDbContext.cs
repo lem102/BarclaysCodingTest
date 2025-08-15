@@ -8,6 +8,7 @@ public class ApplicationDbContext(IConfiguration configuration) : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserEntity>().ToTable("users");
+        modelBuilder.Entity<UserEntity>().HasIndex(u => u.Name).IsUnique();
         new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<UserEntity>());
     }
 

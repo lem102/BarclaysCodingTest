@@ -13,6 +13,7 @@ public class BaseController : ControllerBase
         {
             ErrorType.NotFound => NotFound(error.Description),
             ErrorType.Validation => BadRequest(error.Description),
+            ErrorType.Unauthorized => Unauthorized(error.Description),
             _ => StatusCode(500, error.Description)
         };
     }
