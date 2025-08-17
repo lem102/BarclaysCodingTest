@@ -44,8 +44,8 @@ public class UserServiceTests
         _mockPasswordHasher.Setup(p => p.HashPassword(It.IsAny<UserEntity>(), It.IsAny<string>()))
                            .Returns(hashedPassword);
 
-        _mockRepository.Setup(r => r.AddAsync(It.IsAny<UserEntity>()))
-                       .ReturnsAsync(newUser);
+        _mockRepository.Setup(r => r.Add(It.IsAny<UserEntity>()))
+                       .Returns(newUser);
 
         // Act
         var result = await _sut.Create(request);
@@ -54,15 +54,14 @@ public class UserServiceTests
         Assert.IsNotNull(result.Value);
         Assert.AreEqual(newUser.Id, result.Value.Id);
         Assert.AreEqual(newUser.Name, result.Value.Name);
-        Assert.AreEqual(newUser.Password, result.Value.Password);
 
         _mockRepository.Verify(
-            r => r.AddAsync(
+            r => r.Add(
                 It.Is<UserEntity>(u => u.Name == "newuser" && u.Password == hashedPassword)
             ),
             Times.Once
         );
-        
+     
         _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Once);
     }
 
@@ -81,7 +80,7 @@ public class UserServiceTests
         // Assert
         Assert.AreEqual(Errors.UsernameUnavailable, result);
 
-        _mockRepository.Verify(r => r.AddAsync(It.IsAny<UserEntity>()), Times.Never);
+        _mockRepository.Verify(r => r.Add(It.IsAny<UserEntity>()), Times.Never);
         _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Never);
     }
 
@@ -90,6 +89,8 @@ public class UserServiceTests
     {
         // Arrange
         var existingUser = _users.First();
+
+        _mockUserProvider.Setup(up => up.GetCurrentUserId()).Returns(existingUser.Id);
 
         _mockRepository.Setup(r => r.GetAll()).Returns(_users.AsQueryable());
 
@@ -108,12 +109,173 @@ public class UserServiceTests
         // Arrange
         var nonExistentId = Guid.NewGuid();
 
+        _mockUserProvider.Setup(up => up.GetCurrentUserId()).Returns(nonExistentId);
+
         _mockRepository.Setup(r => r.GetAll()).Returns(_users.AsQueryable());
 
         // Act
         var result = _sut.Get(nonExistentId);
 
         // Assert
-        Assert.AreEqual(Errors.UserNotFound(nonExistentId).Id, result.Error.Id);
+        Assert.AreEqual(Errors.UserNotFound(nonExistentId), result.Error);
+    }
+
+    [TestMethod]
+    public void Get_UserRequestingDifferentUser_ReturnsNotAuthorized()
+    {
+        // Arrange
+        var loggedInUser = _users.First();
+        var userIdInRequest = _users.Last();
+
+        _mockUserProvider.Setup(up => up.GetCurrentUserId()).Returns(loggedInUser.Id);
+        _mockRepository.Setup(r => r.GetAll()).Returns(_users.AsQueryable());
+
+        // Act
+        var result = _sut.Get(userIdInRequest.Id);
+
+        // Assert
+        Assert.AreEqual(Errors.UserUnauthorized(loggedInUser.Id), result.Error);
+    }
+
+    [TestMethod]
+    public async Task Update_ValidRequest_UpdatesUserSuccessfully()
+    {
+        // Arrange
+        var userToUpdate = _users.First();
+        var newName = "updateduser1";
+        var newPassword = "newsecurepassword";
+        var hashedPassword = "newhashedpassword";
+
+        var request = new UpdateUserRequest(newName, newPassword);
+
+        _mockUserProvider.Setup(up => up.GetCurrentUserId()).Returns(userToUpdate.Id);
+        _mockRepository.Setup(r => r.GetAll()).Returns(_users.AsQueryable());
+
+        _mockPasswordHasher.Setup(p => p.HashPassword(It.IsAny<UserEntity>(), newPassword))
+                           .Returns(hashedPassword);
+
+        _mockRepository.Setup(r => r.Update(It.IsAny<UserEntity>()))
+                       .Returns<UserEntity>(u =>
+                       {
+                           u.Name = newName;
+                           u.Password = hashedPassword;
+                           return u;
+                       });
+
+        // Act
+        var result = await _sut.Update(userToUpdate.Id, request);
+
+        // Assert
+        Assert.IsNotNull(result.Value);
+        Assert.AreEqual(userToUpdate.Id, result.Value.Id);
+        Assert.AreEqual(newName, result.Value.Name);
+
+        _mockRepository.Verify(
+            r => r.Update(
+                It.Is<UserEntity>(u => u.Id == userToUpdate.Id && u.Name == newName && u.Password == hashedPassword)
+            ),
+            Times.Once
+        );
+
+        _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task Update_UserDoesNotExist_ReturnsUserNotFound()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+        var request = new UpdateUserRequest("nonexistentuser", "newpassword");
+
+        _mockUserProvider.Setup(up => up.GetCurrentUserId()).Returns(nonExistentId);
+        _mockRepository.Setup(r => r.GetAll()).Returns(_users.AsQueryable());
+
+        // Act
+        var result = await _sut.Update(nonExistentId, request);
+
+        // Assert
+        Assert.AreEqual(Errors.UserNotFound(nonExistentId), result.Error);
+
+        _mockRepository.Verify(r => r.Update(It.IsAny<UserEntity>()), Times.Never);
+        _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task Update_UserIsUnauthorized_ReturnsNotAuthorized()
+    {
+        // Arrange
+        var loggedInUser = _users.First();
+        var userToUpdate = _users.Last();
+        var request = new UpdateUserRequest("unauthorizeduser", "newpassword");
+
+        _mockUserProvider.Setup(up => up.GetCurrentUserId()).Returns(loggedInUser.Id);
+        _mockRepository.Setup(r => r.GetAll()).Returns(_users.AsQueryable());
+
+        // Act
+        var result = await _sut.Update(userToUpdate.Id, request);
+
+        // Assert
+        Assert.AreEqual(Errors.UserUnauthorized(loggedInUser.Id), result.Error);
+
+        _mockRepository.Verify(r => r.Update(It.IsAny<UserEntity>()), Times.Never);
+        _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task Delete_ValidRequest_DeletesUserSuccessfully()
+    {
+        // Arrange
+        var userToDelete = _users.First();
+
+        _mockUserProvider.Setup(up => up.GetCurrentUserId()).Returns(userToDelete.Id);
+        _mockRepository.Setup(r => r.GetAll()).Returns(_users.AsQueryable());
+
+        // Act
+        var result = await _sut.Delete(userToDelete.Id);
+
+        // Assert
+        Assert.IsNull(result.Error);
+
+        _mockRepository.Verify(r => r.Delete(It.Is<UserEntity>(u => u.Id == userToDelete.Id)), Times.Once);
+        _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Once);
+    }
+
+    [TestMethod]
+    public async Task Delete_UserDoesNotExist_ReturnsUserNotFound()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+
+        _mockUserProvider.Setup(up => up.GetCurrentUserId()).Returns(nonExistentId);
+        _mockRepository.Setup(r => r.GetAll()).Returns(_users.AsQueryable());
+
+        // Act
+        var result = await _sut.Delete(nonExistentId);
+
+        // Assert
+        Assert.AreEqual(Errors.UserNotFound(nonExistentId), result.Error);
+
+        _mockRepository.Verify(r => r.Delete(It.IsAny<UserEntity>()), Times.Never);
+        _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task Delete_UserIsUnauthorized_ReturnsNotAuthorized()
+    {
+        // Arrange
+        var loggedInUser = _users.First();
+        var userToDelete = _users.Last();
+
+        _mockUserProvider.Setup(up => up.GetCurrentUserId()).Returns(loggedInUser.Id);
+        _mockRepository.Setup(r => r.GetAll()).Returns(_users.AsQueryable());
+
+        // Act
+        var result = await _sut.Delete(userToDelete.Id);
+
+        // Assert
+        Assert.AreEqual(Errors.UserUnauthorized(loggedInUser.Id), result.Error);
+
+        _mockRepository.Verify(r => r.Delete(It.IsAny<UserEntity>()), Times.Never);
+        _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Never);
     }
 }

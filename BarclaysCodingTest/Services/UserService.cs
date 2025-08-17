@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using BarclaysCodingTest.Dtos;
 using BarclaysCodingTest.Entities;
 using BarclaysCodingTest.Repository;
@@ -27,11 +26,11 @@ public class UserService(
             Name = request.Name,
         };
 
-        var hashedPassword = passwordHasher.HashPassword(user, request.password);
+        var hashedPassword = passwordHasher.HashPassword(user, request.Password);
 
         user.Password = hashedPassword;
 
-        var createdUser = await repository.AddAsync(user);
+        var createdUser = repository.Add(user);
 
         await repository.SaveChangesAsync();
 
@@ -57,31 +56,64 @@ public class UserService(
         return Map(user);
     }
 
+    public async Task<Result<UserResponse>> Update(Guid id, UpdateUserRequest request)
+    {
+        var currentUserId = userProvider.GetCurrentUserId();
+        
+        if (!currentUserId.Equals(id))
+        {
+            return Errors.UserUnauthorized(currentUserId);
+        }
+
+        var nullableUser = repository.GetAll().FirstOrDefault(u => u.Id == id);
+
+        if (nullableUser is not UserEntity user)
+        {
+            return Errors.UserNotFound(id);
+        }
+
+        if (request.Name is string newName)
+        {
+            user.Name = newName;
+        }
+
+        if (request.Password is string newPassword)
+        {
+            var hashedPassword = passwordHasher.HashPassword(user, request.Password);
+            user.Password = hashedPassword;
+        }
+
+        var updatedUser = repository.Update(user);
+        await repository.SaveChangesAsync();
+
+        return Map(updatedUser);
+    }
+
+    public async Task<Result> Delete(Guid id)
+    {
+        var currentUserId = userProvider.GetCurrentUserId();
+
+        if (!currentUserId.Equals(id))
+        {
+            return Errors.UserUnauthorized(currentUserId);
+        }
+
+        var nullableUser = repository.GetAll().FirstOrDefault(u => u.Id == id);
+
+        if (nullableUser is not UserEntity user)
+        {
+            return Errors.UserNotFound(id);
+        }
+
+        repository.Delete(user);
+        await repository.SaveChangesAsync();
+
+        return Result.Success();
+    }
+
     private UserResponse Map(UserEntity user)
     {
-        return new UserResponse(user.Id, user.Name, user.Password);
+        return new UserResponse(user.Id, user.Name);
     }
 }
 
-public interface IUserProvider
-{
-    Guid GetCurrentUserId();
-}
-
-public class UserProvider(IHttpContextAccessor httpContextAccessor) : IUserProvider
-{
-    public Guid GetCurrentUserId()
-    {
-        var httpContext = httpContextAccessor.HttpContext;
-
-        var userIdClaim = httpContext?.User
-            .FindFirst(ClaimTypes.NameIdentifier);
-
-        var nullableUserId = userIdClaim?.Value;
-
-        return nullableUserId switch {
-            string userId => Guid.Parse(userId),
-            _ => Guid.Empty,
-        };
-    }
-}

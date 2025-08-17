@@ -6,14 +6,14 @@ post http://localhost:5215/users
 content-type: application/json
 
 {
-  "name": "jacobl5",
+  "name": "jacobl7",
   "password": "pass"
 }
 
 ** get
 
-get http://localhost:5215/users/0198ae2f-a999-7a8a-9ad0-fff3137eba35
-authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTk4YWU3Yy1iNTE0LTc1ZDctYWI2NC1hYzNkZTliY2E0ZTciLCJqdGkiOiI4NmZlNzQ3ZS0wYWJmLTQ0NjEtYTJhYS1kZDExOTVlMTAyNzYiLCJleHAiOjE3NTUyODA0OTksImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjUyMTUiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MjE1In0.Z8KV7J-9js5_JnbV2DxOpEtjsMxuW28Vmy6_ljoaAYQ
+get http://localhost:5215/users/0198b892-a6d8-7405-a1dd-9d45ade7aac2
+authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTk4Yjg5Mi1hNmQ4LTc0MDUtYTFkZC05ZDQ1YWRlN2FhYzIiLCJqdGkiOiJjNzVhODU2Zi1kMGEzLTQ2ZDEtYjMzZC02NDc2MmExYWM2ZjMiLCJleHAiOjE3NTU0NDUwOTIsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjUyMTUiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MjE1In0.PWfKZOjLsG6aYgwccmUPzQawDPOjFa3rZNy_dR-wTK8
 
 ** login
 
@@ -21,6 +21,21 @@ post http://localhost:5215/login/
 content-type: application/json
 
 {
-  "name": "jacobl5",
+  "name": "jacobl7",
   "password": "pass"
 }
+
+** update
+
+patch http://localhost:5215/users/0198b892-a6d8-7405-a1dd-9d45ade7aac2
+authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTk4Yjg5Mi1hNmQ4LTc0MDUtYTFkZC05ZDQ1YWRlN2FhYzIiLCJqdGkiOiJjNzVhODU2Zi1kMGEzLTQ2ZDEtYjMzZC02NDc2MmExYWM2ZjMiLCJleHAiOjE3NTU0NDUwOTIsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjUyMTUiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MjE1In0.PWfKZOjLsG6aYgwccmUPzQawDPOjFa3rZNy_dR-wTK8
+content-type: application/json
+
+{
+  "name": "mynewname"
+}
+
+** delete
+
+delete http://localhost:5215/users/0198b892-a6d8-7405-a1dd-9d45ade7aac2
+authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTk4Yjg5Mi1hNmQ4LTc0MDUtYTFkZC05ZDQ1YWRlN2FhYzIiLCJqdGkiOiJjNzVhODU2Zi1kMGEzLTQ2ZDEtYjMzZC02NDc2MmExYWM2ZjMiLCJleHAiOjE3NTU0NDUwOTIsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjUyMTUiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MjE1In0.PWfKZOjLsG6aYgwccmUPzQawDPOjFa3rZNy_dR-wTK8

@@ -1,3 +1,3 @@
 namespace BarclaysCodingTest.Dtos;
 
-public record UserResponse(Guid Id, string Name, string Password);
+public record UserResponse(Guid Id, string Name);

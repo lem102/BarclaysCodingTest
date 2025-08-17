@@ -9,10 +9,9 @@ public class Repository<T>(ApplicationDbContext applicationDbContext) : IReposit
 {
     private DbSet<T> _dbSet = applicationDbContext.Set<T>();
 
-    public async Task<T> AddAsync(T entity)
+    public T Add(T entity)
     {
-        var addedEntity = await _dbSet.AddAsync(entity);
-
+        var addedEntity = _dbSet.Add(entity);
         return addedEntity.Entity;
     }
 
@@ -21,9 +20,19 @@ public class Repository<T>(ApplicationDbContext applicationDbContext) : IReposit
         return _dbSet.AsQueryable();
     }
 
-    public async Task<Result> SaveChangesAsync()
+    public T Update(T entity)
     {
-        await applicationDbContext.SaveChangesAsync();
-        return Result.Success();
+        var updatedEntity = _dbSet.Update(entity);
+        return updatedEntity.Entity;
+    }
+
+    public void Delete(T entity)
+    {
+        _dbSet.Remove(entity);
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await  applicationDbContext.SaveChangesAsync();
     }
 }

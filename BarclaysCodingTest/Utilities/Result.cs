@@ -56,7 +56,7 @@ public static class Errors
         "Login details provided are incorrect"
     );
 
-    internal static Error UserUnauthorized(Guid id)
+    public static Error UserUnauthorized(Guid id)
         => new("UserUnauthorized", ErrorType.Unauthorized, $"User with id '{id}' is unauthorized");
     
 }
