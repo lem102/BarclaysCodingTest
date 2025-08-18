@@ -66,18 +66,11 @@ public class BankAccountService(
 
     public async Task<Result<BankAccountResponse>> Update(Guid id, UpdateBankAccountRequest request)
     {
-        var nullableBankAccount = Repository.GetAll().SingleOrDefault(b => b.Id == id);
+        var bankAccountResult = RetrieveAndValidateBankAccount(id);
 
-        if (nullableBankAccount is not BankAccountEntity bankAccount)
+        if (bankAccountResult.Value is not BankAccountEntity bankAccount)
         {
-            return Errors.BankAccountNotFound(id);
-        }
-
-        var userId = UserProvider.GetCurrentUserId();
-
-        if (bankAccount.UserId != userId)
-        {
-            return Errors.UserUnauthorized(userId);
+            return bankAccountResult.Error!;
         }
 
         if (request.Name is string newName)
@@ -93,18 +86,11 @@ public class BankAccountService(
 
     public async Task<Result> Delete(Guid id)
     {
-        var nullableBankAccount = Repository.GetAll().SingleOrDefault(b => b.Id == id);
+        var bankAccountResult = RetrieveAndValidateBankAccount(id);
 
-        if (nullableBankAccount is not BankAccountEntity bankAccount)
+        if (bankAccountResult.Value is not BankAccountEntity bankAccount)
         {
-            return Errors.BankAccountNotFound(id);
-        }
-
-        var userId = UserProvider.GetCurrentUserId();
-
-        if (bankAccount.UserId != userId)
-        {
-            return Errors.UserUnauthorized(userId);
+            return bankAccountResult.Error!;
         }
 
         Repository.Delete(bankAccount);
@@ -120,21 +106,11 @@ public class BankAccountService(
 
     public async Task<Result> CreateTransaction(Guid accountId, CreateTransactionRequest request)
     {
-        var nullableBankAccount = Repository
-            .GetAll()
-            .Include(b => b.Transactions)
-            .SingleOrDefault(b => b.Id == accountId);
+        var bankAccountResult = RetrieveAndValidateBankAccount(accountId);
 
-        if (nullableBankAccount is not BankAccountEntity bankAccount)
+        if (bankAccountResult.Value is not BankAccountEntity bankAccount)
         {
-            return Errors.BankAccountNotFound(accountId);
-        }
-
-        var userId = UserProvider.GetCurrentUserId();
-
-        if (bankAccount.UserId != userId)
-        {
-            return Errors.UserUnauthorized(userId);
+            return bankAccountResult.Error!;
         }
 
         var transactionEntity = new TransactionEntity
@@ -169,21 +145,11 @@ public class BankAccountService(
 
     public Result<IEnumerable<TransactionResponse>> GetAllTransactions(Guid accountId)
     {
-        var nullableBankAccount = Repository
-            .GetAll()
-            .Include(b => b.Transactions)
-            .SingleOrDefault(b => b.Id == accountId);
+        var bankAccountResult = RetrieveAndValidateBankAccount(accountId);
 
-        if (nullableBankAccount is not BankAccountEntity bankAccount)
+        if (bankAccountResult.Value is not BankAccountEntity bankAccount)
         {
-            return Errors.BankAccountNotFound(accountId);
-        }
-
-        var userId = UserProvider.GetCurrentUserId();
-
-        if (bankAccount.UserId != userId)
-        {
-            return Errors.UserUnauthorized(userId);
+            return bankAccountResult.Error!;
         }
 
         return bankAccount.Transactions.Select(Map).ToList();
@@ -191,21 +157,11 @@ public class BankAccountService(
 
     public Result<TransactionResponse> GetTransaction(Guid bankAccountId, Guid transactionId)
     {
-        var nullableBankAccount = Repository
-            .GetAll()
-            .Include(b => b.Transactions)
-            .SingleOrDefault(b => b.Id == bankAccountId);
+        var bankAccountResult = RetrieveAndValidateBankAccount(bankAccountId);
 
-        if (nullableBankAccount is not BankAccountEntity bankAccount)
+        if (bankAccountResult.Value is not BankAccountEntity bankAccount)
         {
-            return Errors.BankAccountNotFound(bankAccountId);
-        }
-
-        var userId = UserProvider.GetCurrentUserId();
-
-        if (bankAccount.UserId != userId)
-        {
-            return Errors.UserUnauthorized(userId);
+            return bankAccountResult.Error!;
         }
 
         var nullableTransaction = bankAccount.Transactions.SingleOrDefault(t => t.Id == transactionId);
@@ -221,5 +177,26 @@ public class BankAccountService(
     private TransactionResponse Map(TransactionEntity entity)
     {
         return new TransactionResponse(entity.Id, entity.BankAccountId, entity.TransactionType, entity.Amount);
+    }
+
+    private Result<BankAccountEntity> RetrieveAndValidateBankAccount(Guid bankAccountId)
+    {
+        var nullableBankAccount = Repository.GetAll()
+            .Include(b => b.Transactions)
+            .SingleOrDefault(b => b.Id == bankAccountId);
+
+        if (nullableBankAccount is not BankAccountEntity bankAccount)
+        {
+            return Errors.BankAccountNotFound(bankAccountId);
+        }
+
+        var userId = UserProvider.GetCurrentUserId();
+
+        if (bankAccount.UserId != userId)
+        {
+            return Errors.UserUnauthorized(userId);
+        }
+
+        return bankAccount;
     }
 }
