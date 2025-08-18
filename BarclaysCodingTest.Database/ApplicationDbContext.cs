@@ -1,4 +1,6 @@
 using BarclaysCodingTest.Api.Entities;
+using BarclaysCodingTest.Database.Entities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace BarclaysCodingTest.Database;

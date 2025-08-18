@@ -1,4 +1,4 @@
-namespace BarclaysCodingTest.Api.Repository;
+namespace BarclaysCodingTest.Database.Repository;
 
 public interface IRepository<T> 
 {

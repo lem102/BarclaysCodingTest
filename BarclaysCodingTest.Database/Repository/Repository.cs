@@ -1,9 +1,7 @@
-using BarclaysCodingTest.Api.Database;
 using BarclaysCodingTest.Api.Entities;
-using BarclaysCodingTest.Api.Utilities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BarclaysCodingTest.Api.Repository;
+namespace BarclaysCodingTest.Database.Repository;
 
 public class Repository<T>(ApplicationDbContext applicationDbContext) : IRepository<T> where T : BaseEntity
 {

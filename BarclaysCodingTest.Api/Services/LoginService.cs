@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using BarclaysCodingTest.Api.Dtos;
 using BarclaysCodingTest.Api.Entities;
-using BarclaysCodingTest.Api.Repository;
+using BarclaysCodingTest.Database.Repository;
 using BarclaysCodingTest.Api.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;

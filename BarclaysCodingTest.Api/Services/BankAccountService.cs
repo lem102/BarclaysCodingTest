@@ -1,6 +1,6 @@
 using BarclaysCodingTest.Api.Dtos;
 using BarclaysCodingTest.Api.Entities;
-using BarclaysCodingTest.Api.Repository;
+using BarclaysCodingTest.Database.Repository;
 using BarclaysCodingTest.Api.Utilities;
 
 namespace BarclaysCodingTest.Api.Services;

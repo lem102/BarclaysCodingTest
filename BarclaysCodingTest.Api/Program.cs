@@ -1,11 +1,11 @@
-using BarclaysCodingTest.Api.Database;
-using BarclaysCodingTest.Api.Repository;
+using BarclaysCodingTest.Database.Repository;
 using BarclaysCodingTest.Api.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using BarclaysCodingTest.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
