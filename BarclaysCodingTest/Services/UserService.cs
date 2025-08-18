@@ -3,6 +3,7 @@ using BarclaysCodingTest.Entities;
 using BarclaysCodingTest.Database.Repository;
 using BarclaysCodingTest.Utilities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace BarclaysCodingTest.Services;
 
@@ -89,20 +90,28 @@ public class UserService(
         return Map(updatedUser);
     }
 
-    public async Task<Result> Delete(Guid id)
+    public async Task<Result> Delete(Guid userId)
     {
         var currentUserId = UserProvider.GetCurrentUserId();
 
-        if (!currentUserId.Equals(id))
+        if (!currentUserId.Equals(userId))
         {
             return Errors.UserUnauthorized(currentUserId);
         }
 
-        var nullableUser = Repository.GetAll().SingleOrDefault(u => u.Id == id);
+        var nullableUser = Repository
+            .GetAll()
+            .Include(u => u.BankAccounts)
+            .SingleOrDefault(u => u.Id == userId);
 
         if (nullableUser is not UserEntity user)
         {
-            return Errors.UserNotFound(id);
+            return Errors.UserNotFound(userId);
+        }
+
+        if (user.BankAccounts.Any())
+        {
+            return Errors.UserHasBankAccountPreventingDeletion(userId);
         }
 
         Repository.Delete(user);

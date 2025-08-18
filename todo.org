@@ -43,7 +43,7 @@ Given a user has successfully authenticated
 When the user makes a `DELETE` request to the `/v1/users/{userId}` endpoint
 And they do not have a bank account
 Then the system deletes their user
-** TODO Scenario: User wants to delete their user details and they have a bank account
+** DONE Scenario: User wants to delete their user details and they have a bank account
 Given a user has successfully authenticated
 When the user makes a `DELETE` request to the `/v1/users/{userId}` endpoint
 And they have a bank account
@@ -174,29 +174,29 @@ When the user makes a `GET` request to the `/v1/accounts/{accountId}/transaction
 And the `accountId` doesn't exist
 Then the system returns a Not Found status code and error message
 * Fetch a Transaction
-** TODO Scenario: User wants to fetch a transaction on their bank account
+** DONE Scenario: User wants to fetch a transaction on their bank account
 Given a user has successfully authenticated
 When the user makes a `GET` request to the `/v1/accounts/{accountId}/transactions/{transactionId}` endpoint
 And the account is associated with their `userId`
 And the `transactionId` is associated with the `accountId` specified
 Then the transaction details are returned
-** TODO Scenario: User wants to fetch a transaction on another user's bank account
+** DONE Scenario: User wants to fetch a transaction on another user's bank account
 Given a user has successfully authenticated
 When the user makes a `GET` request to the `/v1/accounts/{accountId}/transactions/{transactionId}` endpoint
 And the account is not associated with their `userId`
 Then the system returns a Forbidden status code and error message
-** TODO Scenario: User wants to fetch a transaction on a non-existent bank account
+** DONE Scenario: User wants to fetch a transaction on a non-existent bank account
 Given a user has successfully authenticated
 When the user makes a `GET` request to the `/v1/accounts/{accountId}/transactions/{transactionId}` endpoint
 And the `accountId` doesn't exist
 Then the system returns a Not Found status code and error message
-** TODO Scenario: User wants to fetch a transactions on a non-existent transaction ID
+** DONE Scenario: User wants to fetch a transactions on a non-existent transaction ID
 Given a user has successfully authenticated
 When the user makes a `GET` request to the `/v1/accounts/{accountId}/transactions/{transactionId}` endpoint
 And the account is associated with their `userId`
 And the `transactionId` does not exist
 Then the system returns a Not Found status code and error message
-** TODO Scenario: User wants to fetch a transaction against the wrong bank account
+** DONE Scenario: User wants to fetch a transaction against the wrong bank account
 Given a user has successfully authenticated
 When the user makes a `GET` request to the `/v1/accounts/{accountId}/transactions/{transactionId}` endpoint
 And the account is associated with their `userId`

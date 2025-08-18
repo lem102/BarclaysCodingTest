@@ -59,6 +59,12 @@ public static class Errors
     public static Error UserUnauthorized(Guid id)
         => new("UserUnauthorized", ErrorType.Unauthorized, $"User with id '{id}' is unauthorized");
 
+    public static Error UserHasBankAccountPreventingDeletion(Guid userId) => new(
+        "UserHasBankAccountPreventingDeletion",
+        ErrorType.Validation,
+        $"The user '{userId}' has at least one bank account, which prevents deletion"
+    );
+
     public static Error BankAccountNotFound(Guid id) => new(
         "BankAccountNotFound",
         ErrorType.NotFound,
@@ -82,5 +88,4 @@ public static class Errors
         ErrorType.NotFound,
         $"The transaction '{transactionId}' was not found"
     );
-    
 }
