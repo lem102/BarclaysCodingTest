@@ -136,24 +136,24 @@ And the account has sufficient funds
 And the account is associated with their `userId`
 Then the withdrawal is registered against the account
 And the account balance is updated
-** TODO Scenario: User wants to withdraw money from their bank account but they have insufficient funds
+** DONE Scenario: User wants to withdraw money from their bank account but they have insufficient funds
 Given a user has successfully authenticated
 When the user makes a `POST` request to the `/v1/accounts/{accountId}/transactions` endpoint with all the required data
 And the transaction type is `withdrawal`
 And the account has insufficient funds
 And the account is associated with their `userId`
 Then the system returns a Unprocessable Entity status code and error message
-** TODO Scenario: User wants to deposit or withdraw money into another user's bank account
+** DONE Scenario: User wants to deposit or withdraw money into another user's bank account
 Given a user has successfully authenticated
 When the user makes a `POST` request to the `/v1/accounts/{accountId}/transactions` endpoint with all the required data
 And the account is not associated with their `userId`
 Then the system returns a Forbidden status code and error message
-** TODO Scenario: User wants to deposit or withdraw money into a non-existent bank account
+** DONE Scenario: User wants to deposit or withdraw money into a non-existent bank account
 Given a user has successfully authenticated
 When the user makes a `POST` request to the `/v1/accounts/{accountId}/transactions` endpoint with all the required data
 And the `accountId` doesn't exist
 Then the system returns a Not Found status code and error message
-** TODO Scenario: User wants to deposit or withdraw money without supplying all required data
+** DONE Scenario: User wants to deposit or withdraw money without supplying all required data
 Given a user has successfully authenticated
 When the user makes a `POST` request to the `/v1/accounts/{accountId}/transactions` endpoint with required data missing
 Then the system returns a Bad Request status code and error message

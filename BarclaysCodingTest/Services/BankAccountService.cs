@@ -156,6 +156,11 @@ public class BankAccountService(
             _ => bankAccount.Balance - request.Amount,
         };
 
+        if (bankAccount.Balance < 0)
+        {
+            return Errors.InsufficientFunds(bankAccount.Id);
+        }
+
         Repository.Update(bankAccount);
         await Repository.SaveChangesAsync();
         

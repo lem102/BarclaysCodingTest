@@ -70,5 +70,11 @@ public static class Errors
         ErrorType.Validation,
         $"Transaction type '{type}' is not a valid transaction type"
     );
+
+    public static Error InsufficientFunds(Guid bankAccountId) => new(
+        "InsufficientFunds",
+        ErrorType.Validation,
+        $"The bank account '{bankAccountId}' has insufficient funds"
+    );
     
 }
