@@ -264,6 +264,8 @@ public class BankAccountServiceTests
         Assert.AreEqual(1, account.Transactions.Count);
         Assert.AreEqual(request.Amount, account.Transactions.First().Amount);
         Assert.AreEqual(request.TransactionType, account.Transactions.First().TransactionType);
+
+        _mockRepository.Verify(r => r.Update(It.Is<BankAccountEntity>(b => b.Id == account.Id)), Times.Once);
         _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Once);
     }
 
@@ -291,6 +293,8 @@ public class BankAccountServiceTests
         Assert.IsNull(result.Error);
         Assert.AreEqual(initialBalance - request.Amount, account.Balance);
         Assert.AreEqual(1, account.Transactions.Count);
+
+        _mockRepository.Verify(r => r.Update(It.Is<BankAccountEntity>(b => b.Id == account.Id)), Times.Once);
         _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Once);
     }
 
@@ -314,6 +318,8 @@ public class BankAccountServiceTests
 
         // Assert
         Assert.AreEqual(Errors.InsufficientFunds(account.Id), result.Error);
+
+        _mockRepository.Verify(r => r.Update(It.IsAny<BankAccountEntity>()), Times.Never);
         _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Never);
     }
 
@@ -335,6 +341,8 @@ public class BankAccountServiceTests
 
         // Assert
         Assert.AreEqual(Errors.BankAccountNotFound(nonExistentId), result.Error);
+
+        _mockRepository.Verify(r => r.Update(It.IsAny<BankAccountEntity>()), Times.Never);
         _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Never);
     }
 
