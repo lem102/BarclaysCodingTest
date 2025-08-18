@@ -1,10 +1,10 @@
 using Moq;
-using BarclaysCodingTest.Api.Dtos;
-using BarclaysCodingTest.Api.Entities;
+using BarclaysCodingTest.Dtos;
+using BarclaysCodingTest.Entities;
 using BarclaysCodingTest.Database.Repository;
-using BarclaysCodingTest.Api.Utilities;
+using BarclaysCodingTest.Utilities;
 using Microsoft.AspNetCore.Identity;
-using BarclaysCodingTest.Api.Services;
+using BarclaysCodingTest.Services;
 
 namespace BarclaysCodingTest.Test.Services;
 

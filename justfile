@@ -1,3 +1,5 @@
+set positional-arguments
+
 build:
     dotnet build
 
@@ -6,3 +8,6 @@ run:
 
 test:
     dotnet test BarclaysCodingTest.Test/BarclaysCodingTest.Test.csproj
+
+@ef *args='':
+    dotnet ef --project BarclaysCodingTest/BarclaysCodingTest.csproj $@
