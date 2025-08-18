@@ -18,8 +18,19 @@ public class UserServiceTests
 
     private List<UserEntity> _users = new List<UserEntity>
     {
-        new UserEntity { Id = Guid.NewGuid(), Name = "testuser1", Password = "hashedpassword1" },
-        new UserEntity { Id = Guid.NewGuid(), Name = "testuser2", Password = "hashedpassword2" }
+        new UserEntity {
+            Id = Guid.NewGuid(),
+            Name = "testuser1",
+            Password = "hashedpassword1",
+            BankAccounts = new List<BankAccountEntity>() {}
+        },
+        new UserEntity {
+            Id = Guid.NewGuid(),
+            Name = "testuser2",
+            Password = "hashedpassword2",
+            BankAccounts = new List<BankAccountEntity>() {new BankAccountEntity{}}
+
+        }
     };
 
     [TestInitialize]
@@ -277,6 +288,25 @@ public class UserServiceTests
         Assert.AreEqual(Errors.UserUnauthorized(loggedInUser.Id), result.Error);
 
         _mockRepository.Verify(r => r.Delete(It.IsAny<UserEntity>()), Times.Never);
+        _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task Delete_UserHasBankAccount_ReturnsError()
+    {
+        // Arrange
+        var userToDelete = _users[1];
+
+        _mockUserProvider.Setup(up => up.GetCurrentUserId()).Returns(userToDelete.Id);
+        _mockRepository.Setup(r => r.GetAll()).Returns(_users.AsQueryable());
+
+        // Act
+        var result = await _sut.Delete(userToDelete.Id);
+
+        // Assert
+        Assert.AreEqual(Errors.UserHasBankAccountPreventingDeletion(userToDelete.Id), result.Error);
+
+        _mockRepository.Verify(r => r.Delete(It.Is<UserEntity>(u => u.Id == userToDelete.Id)), Times.Never);
         _mockRepository.Verify(r => r.SaveChangesAsync(), Times.Never);
     }
 }

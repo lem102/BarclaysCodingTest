@@ -220,6 +220,6 @@ public class BankAccountService(
 
     private TransactionResponse Map(TransactionEntity entity)
     {
-        return new TransactionResponse(entity.Id, entity.TransactionType, entity.Amount);
+        return new TransactionResponse(entity.Id, entity.BankAccountId, entity.TransactionType, entity.Amount);
     }
 }
