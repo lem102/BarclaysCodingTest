@@ -76,5 +76,11 @@ public static class Errors
         ErrorType.Validation,
         $"The bank account '{bankAccountId}' has insufficient funds"
     );
+
+    public static Error TransactionNotFound(Guid transactionId) => new(
+        "TransactionNotFound",
+        ErrorType.NotFound,
+        $"The transaction '{transactionId}' was not found"
+    );
     
 }

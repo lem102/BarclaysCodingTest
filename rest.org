@@ -11,7 +11,7 @@ post /v1/users
 content-type: application/json
 
 {
-  "name": "user",
+  "name": "user2",
   "password": "pass"
 }
 
@@ -89,10 +89,14 @@ delete /v1/bankaccounts/{{(verb-json-get (oref (verb-stored-response "new-bank-a
 
 *** create transaction
 
-post /v1/bankaccounts/0198bd3e-d784-7149-97cb-eddbe2045aed/transactions
+post /v1/bankaccounts/{{(verb-json-get (oref (verb-stored-response "new-bank-account") body) "id")}}/transactions
 content-type: application/json
 
 {
   "amount": 5,
-  "transactionType": "withdrawal"
+  "transactionType": "deposit"
 }
+
+*** get all transactions
+
+get /v1/bankaccounts/{{(verb-json-get (oref (verb-stored-response "new-bank-account") body) "id")}}/transactions

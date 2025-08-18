@@ -158,17 +158,17 @@ Given a user has successfully authenticated
 When the user makes a `POST` request to the `/v1/accounts/{accountId}/transactions` endpoint with required data missing
 Then the system returns a Bad Request status code and error message
 * List Transactions
-** TODO Scenario: User wants to view all transactions on their bank account
+** DONE Scenario: User wants to view all transactions on their bank account
 Given a user has successfully authenticated
 When the user makes a `GET` request to the `/v1/accounts/{accountId}/transactions` endpoint
 And the account is associated with their `userId`
 Then the transactions are returned
-** TODO Scenario: User wants to view all transactions on another user's bank account
+** DONE Scenario: User wants to view all transactions on another user's bank account
 Given a user has successfully authenticated
 When the user makes a `GET` request to the `/v1/accounts/{accountId}/transactions` endpoint
 And the account is not associated with their `userId`
 Then the system returns a Forbidden status code and error message
-** TODO Scenario: User wants to view all transactions on a non-existent bank account
+** DONE Scenario: User wants to view all transactions on a non-existent bank account
 Given a user has successfully authenticated
 When the user makes a `GET` request to the `/v1/accounts/{accountId}/transactions` endpoint
 And the `accountId` doesn't exist

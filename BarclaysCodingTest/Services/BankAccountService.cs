@@ -115,7 +115,7 @@ public class BankAccountService(
 
     private BankAccountResponse Map(BankAccountEntity entity)
     {
-        return new BankAccountResponse(entity.Id, entity.UserId, entity.Name);
+        return new BankAccountResponse(entity.Id, entity.UserId, entity.Name, entity.Balance);
     }
 
     public async Task<Result> CreateTransaction(Guid accountId, CreateTransactionRequest request)
@@ -169,11 +169,57 @@ public class BankAccountService(
 
     public Result<IEnumerable<TransactionResponse>> GetAllTransactions(Guid accountId)
     {
-        throw new NotImplementedException();
+        var nullableBankAccount = Repository
+            .GetAll()
+            .Include(b => b.Transactions)
+            .SingleOrDefault(b => b.Id == accountId);
+
+        if (nullableBankAccount is not BankAccountEntity bankAccount)
+        {
+            return Errors.BankAccountNotFound(accountId);
+        }
+
+        var userId = UserProvider.GetCurrentUserId();
+
+        if (bankAccount.UserId != userId)
+        {
+            return Errors.UserUnauthorized(userId);
+        }
+
+        return bankAccount.Transactions.Select(Map).ToList();
     }
 
-    public Result<TransactionResponse> GetTransaction(Guid accountId, Guid transactionId)
+    public Result<TransactionResponse> GetTransaction(Guid bankAccountId, Guid transactionId)
     {
-        throw new NotImplementedException();
+        var nullableBankAccount = Repository
+            .GetAll()
+            .Include(b => b.Transactions)
+            .SingleOrDefault(b => b.Id == bankAccountId);
+
+        if (nullableBankAccount is not BankAccountEntity bankAccount)
+        {
+            return Errors.BankAccountNotFound(bankAccountId);
+        }
+
+        var userId = UserProvider.GetCurrentUserId();
+
+        if (bankAccount.UserId != userId)
+        {
+            return Errors.UserUnauthorized(userId);
+        }
+
+        var nullableTransaction = bankAccount.Transactions.SingleOrDefault(t => t.Id == transactionId);
+
+        if (nullableTransaction is not TransactionEntity transaction)
+        {
+            return Errors.TransactionNotFound(transactionId);
+        }
+
+        return Map(transaction);
+    }
+
+    private TransactionResponse Map(TransactionEntity entity)
+    {
+        return new TransactionResponse(entity.Id, entity.TransactionType, entity.Amount);
     }
 }
