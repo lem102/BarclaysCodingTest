@@ -1,11 +1,12 @@
 using Moq;
-using BarclaysCodingTest.Dtos;
-using BarclaysCodingTest.Entities;
-using BarclaysCodingTest.Repository;
-using BarclaysCodingTest.Utilities;
+using BarclaysCodingTest.Api.Dtos;
+using BarclaysCodingTest.Api.Entities;
+using BarclaysCodingTest.Api.Repository;
+using BarclaysCodingTest.Api.Utilities;
 using Microsoft.AspNetCore.Identity;
+using BarclaysCodingTest.Api.Services;
 
-namespace BarclaysCodingTest.Services.Tests;
+namespace BarclaysCodingTest.Test.Services;
 
 [TestClass]
 public class UserServiceTests

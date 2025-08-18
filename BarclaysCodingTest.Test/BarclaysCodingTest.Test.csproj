@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BarclaysCodingTest\BarclaysCodingTest.csproj" />
+    <ProjectReference Include="..\BarclaysCodingTest.Api\BarclaysCodingTest.Api.csproj" />
   </ItemGroup>
 
 </Project>

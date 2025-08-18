@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarclaysCodingTest", "BarclaysCodingTest\BarclaysCodingTest.csproj", "{85D6FA76-A385-4310-B313-C721FDCBE50F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarclaysCodingTest.Api", "BarclaysCodingTest.Api\BarclaysCodingTest.Api.csproj", "{85D6FA76-A385-4310-B313-C721FDCBE50F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarclaysCodingTest.Test", "BarclaysCodingTest.Test\BarclaysCodingTest.Test.csproj", "{2DF9BB5F-6D1E-408E-94A7-6D383E0B1291}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarclaysCodingTest.Database", "BarclaysCodingTest.Database\BarclaysCodingTest.Database.csproj", "{9122D483-C076-498E-B355-E3920593862C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,18 @@ Global
 		{2DF9BB5F-6D1E-408E-94A7-6D383E0B1291}.Release|x64.Build.0 = Release|Any CPU
 		{2DF9BB5F-6D1E-408E-94A7-6D383E0B1291}.Release|x86.ActiveCfg = Release|Any CPU
 		{2DF9BB5F-6D1E-408E-94A7-6D383E0B1291}.Release|x86.Build.0 = Release|Any CPU
+		{9122D483-C076-498E-B355-E3920593862C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9122D483-C076-498E-B355-E3920593862C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9122D483-C076-498E-B355-E3920593862C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9122D483-C076-498E-B355-E3920593862C}.Debug|x64.Build.0 = Debug|Any CPU
+		{9122D483-C076-498E-B355-E3920593862C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9122D483-C076-498E-B355-E3920593862C}.Debug|x86.Build.0 = Debug|Any CPU
+		{9122D483-C076-498E-B355-E3920593862C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9122D483-C076-498E-B355-E3920593862C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9122D483-C076-498E-B355-E3920593862C}.Release|x64.ActiveCfg = Release|Any CPU
+		{9122D483-C076-498E-B355-E3920593862C}.Release|x64.Build.0 = Release|Any CPU
+		{9122D483-C076-498E-B355-E3920593862C}.Release|x86.ActiveCfg = Release|Any CPU
+		{9122D483-C076-498E-B355-E3920593862C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,41 +1,67 @@
 * rest :verb:
 
-** create
-
-post http://localhost:5215/users
-content-type: application/json
-
-{
-  "name": "jacobl7",
-  "password": "pass"
-}
-
-** get
-
-get http://localhost:5215/users/0198b892-a6d8-7405-a1dd-9d45ade7aac2
-authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTk4Yjg5Mi1hNmQ4LTc0MDUtYTFkZC05ZDQ1YWRlN2FhYzIiLCJqdGkiOiJjNzVhODU2Zi1kMGEzLTQ2ZDEtYjMzZC02NDc2MmExYWM2ZjMiLCJleHAiOjE3NTU0NDUwOTIsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjUyMTUiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MjE1In0.PWfKZOjLsG6aYgwccmUPzQawDPOjFa3rZNy_dR-wTK8
+template http://localhost:5215
+authorization: bearer {{(oref (verb-stored-response "token") body)}}
 
 ** login
+:properties:
+:Verb-Store: token
+:end:
 
-post http://localhost:5215/login/
+post /login
 content-type: application/json
 
 {
-  "name": "jacobl7",
+  "name": "{{(verb-json-get (oref (verb-stored-response "new-user") body) "name")}}",
   "password": "pass"
 }
 
-** update
+** users
 
-patch http://localhost:5215/users/0198b892-a6d8-7405-a1dd-9d45ade7aac2
-authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTk4Yjg5Mi1hNmQ4LTc0MDUtYTFkZC05ZDQ1YWRlN2FhYzIiLCJqdGkiOiJjNzVhODU2Zi1kMGEzLTQ2ZDEtYjMzZC02NDc2MmExYWM2ZjMiLCJleHAiOjE3NTU0NDUwOTIsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjUyMTUiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MjE1In0.PWfKZOjLsG6aYgwccmUPzQawDPOjFa3rZNy_dR-wTK8
+*** create
+:properties:
+:Verb-Store: new-user
+:end:
+
+post /users
 content-type: application/json
 
 {
-  "name": "mynewname"
+  "name": "userC",
+  "password": "pass"
 }
 
-** delete
+*** blah
 
-delete http://localhost:5215/users/0198b892-a6d8-7405-a1dd-9d45ade7aac2
-authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTk4Yjg5Mi1hNmQ4LTc0MDUtYTFkZC05ZDQ1YWRlN2FhYzIiLCJqdGkiOiJjNzVhODU2Zi1kMGEzLTQ2ZDEtYjMzZC02NDc2MmExYWM2ZjMiLCJleHAiOjE3NTU0NDUwOTIsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjUyMTUiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MjE1In0.PWfKZOjLsG6aYgwccmUPzQawDPOjFa3rZNy_dR-wTK8
+{
+  "id": "0198bb1c-32ab-7c45-b2d1-ef121f5cbd09",
+  "name": "userA"
+}
+
+{
+  "id": "0198bb1c-92e6-7546-ad73-0068e7b7ea75",
+  "name": "userB"
+}
+
+*** get
+
+get /users/{{(verb-json-get (oref (verb-stored-response "new-user") body) "id")}}
+
+*** update
+
+patch /users/{{(verb-json-get (oref (verb-stored-response "new-user") body) "id")}}
+content-type: application/json
+
+{
+  "name": "jacobwozere"
+}
+
+*** delete
+
+delete /users/{{(verb-json-get (oref (verb-stored-response "new-user") body) "id")}}
+
+** bank account
+
+*** create
+
+
