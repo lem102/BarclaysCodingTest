@@ -59,76 +59,76 @@ When the user makes a `DELETE` request to the `/v1/users/{userId}` endpoint
 And the `userId` doesn't exist
 Then the system returns a Not Found status code and error message
 * Create a Bank Account
-** TODO Scenario: User wants to create a new bank account
+** DONE Scenario: User wants to create a new bank account
 Given a user has successfully authenticated
 When the user makes a `POST` request to the `/v1/accounts` endpoint with all the required data
 Then a new bank account is created, and the account details are returned
-** TODO Scenario: User wants to create a new bank account without supplying all required data
+** DONE Scenario: User wants to create a new bank account without supplying all required data
 Given a user has successfully authenticated
 When the user makes a `POST` request to the `/v1/accounts` endpoint with required data missing
 Then the system returns a Bad Request status code and error message
 * List bank accounts
-** TODO Scenario: User wants to view their bank accounts
+** DONE Scenario: User wants to view their bank accounts
 Given a user has successfully authenticated
 When the user makes a `GET` request to the `/v1/accounts` endpoint
 Then all the bank accounts associated with their `userId` are returned
 * Fetch a Bank Account
-** TODO Scenario: User wants to fetch their bank account details
+** DONE Scenario: User wants to fetch their bank account details
 Given a user has successfully authenticated
 When the user makes a `GET` request to the `/v1/accounts/{accountId}` endpoint
 And the account is associated with their `userId`
 Then the system fetches the bank account details
-** TODO Scenario: User wants to fetch another user's bank account details
+** DONE Scenario: User wants to fetch another user's bank account details
 Given a user has successfully authenticated
 When the user makes a `GET` request to the `/v1/accounts/{accountId}` endpoint
 And the account is not associated with their `userId`
 Then the system returns a Forbidden status code and error message
-** TODO Scenario: User wants to fetch a non-existent bank account
+** DONE Scenario: User wants to fetch a non-existent bank account
 Given a user has successfully authenticated
 When the user makes a `GET` request to the `/v1/accounts/{accountId}` endpoint
 And the `accountId` doesn't exist
 Then the system returns a Not Found status code and error message
 * Update a Bank Account
-** TODO Scenario: User wants to update their bank account details
+** DONE Scenario: User wants to update their bank account details
 Given a user has successfully authenticated
 When the user makes a `PATCH` request to the `/v1/accounts/{accountId}` endpoint supplying all the required data
 And the account is associated with their `userId`
 Then the system updates the bank account information and returns the updated data
-** TODO Scenario: User wants to fetch another user's bank account details
+** DONE Scenario: User wants to fetch another user's bank account details
 Given a user has successfully authenticated
 When the user makes a `PATCH` request to the `/v1/accounts/{accountId}` endpoint
 And the account is not associated with their `userId`
 Then the system returns a Forbidden status code and error message
-** TODO Scenario: User wants to fetch a non-existent bank account
+** DONE Scenario: User wants to fetch a non-existent bank account
 Given a user has successfully authenticated
 When the user makes a `PATCH` request to the `/v1/accounts/{accountId}` endpoint
 And the `accountId` doesn't exist
 Then the system returns a Not Found status code and error message
 * Delete a Bank Account
-** TODO Scenario: User deletes an existing bank account
+** DONE Scenario: User deletes an existing bank account
 Given a user has successfully authenticated
 When the user makes a `DELETE` request to the `/v1/accounts/{accountId}` endpoint
 And the account is associated with their `userId`
 Then the system deletes the bank account
-** TODO Scenario: User wants to delete another user's bank account details
+** DONE Scenario: User wants to delete another user's bank account details
 Given a user has successfully authenticated
 When the user makes a `DELETE` request to the `/v1/accounts/{accountId}` endpoint
 And the account is not associated with their `userId`
 Then the system returns a Forbidden status code and error message
-** TODO Scenario: User wants to delete a non-existent bank account
+** DONE Scenario: User wants to delete a non-existent bank account
 Given a user has successfully authenticated
 When the user makes a `DELETE` request to the `/v1/accounts/{accountId}` endpoint
 And the `accountId` doesn't exist
 Then the system returns a Not Found status code and error message
 * Create a Transaction
-** TODO Scenario: User wants to deposit money into their bank account
+** DONE Scenario: User wants to deposit money into their bank account
 Given a user has successfully authenticated
 When the user makes a `POST` request to the `/v1/accounts/{accountId}/transactions` endpoint with all the required data
 And the transaction type is `deposit`
 And the account is associated with their `userId`
 Then the deposit is registered against the account
 And the account balance is updated
-** TODO Scenario: User wants to withdraw money from their bank account
+** DONE Scenario: User wants to withdraw money from their bank account
 Given a user has successfully authenticated
 When the user makes a `POST` request to the `/v1/accounts/{accountId}/transactions` endpoint with all the required data
 And the transaction type is `withdrawal`

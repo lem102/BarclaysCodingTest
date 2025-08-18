@@ -8,6 +8,8 @@ public class BankAccountEntityTypeConfiguration
 {
     public void Configure(EntityTypeBuilder<BankAccountEntity> builder)
     {
+        builder.ToTable("bank_accounts");
+
         builder
             .HasKey(b => b.Id);
 
@@ -27,9 +29,10 @@ public class BankAccountEntityTypeConfiguration
             .IsRequired();
 
         builder
-            .HasOne<UserEntity>(b => b.UserId)
-            .WithMany<BankAccountEntity>(u => u.BankAccounts)
-            .HasForeignKey(u => u.UserId);
+            .HasOne<UserEntity>(b => b.User)
+            .WithMany(u => u.BankAccounts)
+            .HasForeignKey(u => u.UserId)
+            .IsRequired();
     }
 }
 

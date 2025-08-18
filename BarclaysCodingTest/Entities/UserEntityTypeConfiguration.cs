@@ -8,6 +8,10 @@ public class UserEntityTypeConfiguration
 {
     public void Configure(EntityTypeBuilder<UserEntity> builder)
     {
+        builder.ToTable("users");
+
+        builder.HasIndex(u => u.Name).IsUnique();
+
         builder
             .HasKey(b => b.Id);
 

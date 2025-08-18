@@ -1,7 +1,19 @@
-* rest :verb:
+* login :verb:
 
 template http://localhost:5215
-authorization: bearer {{(oref (verb-stored-response "token") body)}}
+
+** create
+:properties:
+:Verb-Store: new-user
+:end:
+
+post /v1/users
+content-type: application/json
+
+{
+  "name": "userG",
+  "password": "pass"
+}
 
 ** login
 :properties:
@@ -16,32 +28,12 @@ content-type: application/json
   "password": "pass"
 }
 
+* rest :verb:
+
+template http://localhost:5215
+authorization: bearer {{(oref (verb-stored-response "token") body)}}
+
 ** users
-
-*** create
-:properties:
-:Verb-Store: new-user
-:end:
-
-post /users
-content-type: application/json
-
-{
-  "name": "userC",
-  "password": "pass"
-}
-
-*** blah
-
-{
-  "id": "0198bb1c-32ab-7c45-b2d1-ef121f5cbd09",
-  "name": "userA"
-}
-
-{
-  "id": "0198bb1c-92e6-7546-ad73-0068e7b7ea75",
-  "name": "userB"
-}
 
 *** get
 
@@ -63,5 +55,44 @@ delete /users/{{(verb-json-get (oref (verb-stored-response "new-user") body) "id
 ** bank account
 
 *** create
+:properties:
+:Verb-Store: new-bank-account
+:end:
 
+post /v1/bankaccounts/
+content-type: application/json
 
+{
+  "name": "jacobBankAccount50"
+}
+
+*** list
+
+get /v1/bankaccounts/
+
+*** get
+
+get /v1/bankaccounts/{{(verb-json-get (oref (verb-stored-response "new-bank-account") body) "id")}}
+
+*** update
+
+patch /v1/bankaccounts/{{(verb-json-get (oref (verb-stored-response "new-bank-account") body) "id")}}
+content-type: application/json
+
+{
+  "name": "newName"
+}
+
+*** delete
+
+delete /v1/bankaccounts/{{(verb-json-get (oref (verb-stored-response "new-bank-account") body) "id")}}
+
+*** create transaction
+
+post /v1/bankaccounts/{{(verb-json-get (oref (verb-stored-response "new-bank-account") body) "id")}}/transactions
+content-type: application/json
+
+{
+  "amount": 5,
+  "transactionType": "withdrawal"
+}

@@ -1,4 +1,4 @@
-using BarclaysCodingTest.Dtos;
+using BarclaysCodingTest.Enums;
 
 namespace BarclaysCodingTest.Utilities;
 
@@ -58,7 +58,17 @@ public static class Errors
 
     public static Error UserUnauthorized(Guid id)
         => new("UserUnauthorized", ErrorType.Unauthorized, $"User with id '{id}' is unauthorized");
+
+    public static Error BankAccountNotFound(Guid id) => new(
+        "BankAccountNotFound",
+        ErrorType.NotFound,
+        $"Bank Account with id \"{id.ToString()}\" not found"
+    );
+
+    public static Error InvalidTransactionType(TransactionType type) => new(
+        "InvalidTransactionType",
+        ErrorType.Validation,
+        $"Transaction type '{type}' is not a valid transaction type"
+    );
     
 }
-
-

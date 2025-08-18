@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Identity;
 namespace BarclaysCodingTest.Services;
 
 public class UserService(
-    IPasswordHasher<UserEntity> passwordHasher,
-    IRepository<UserEntity> repository,
-    IUserProvider userProvider
+    IPasswordHasher<UserEntity> PasswordHasher,
+    IRepository<UserEntity> Repository,
+    IUserProvider UserProvider
 ) : IUserService
 {
     public async Task<Result<UserResponse>> Create(CreateUserRequest request)
     {
-        var existingUserWithName = repository.GetAll().SingleOrDefault(u => u.Name == request.Name);
+        var existingUserWithName = Repository.GetAll().SingleOrDefault(u => u.Name == request.Name);
 
         if (existingUserWithName is not null)
         {
@@ -26,27 +26,27 @@ public class UserService(
             Name = request.Name,
         };
 
-        var hashedPassword = passwordHasher.HashPassword(user, request.Password);
+        var hashedPassword = PasswordHasher.HashPassword(user, request.Password);
 
         user.Password = hashedPassword;
 
-        var createdUser = repository.Add(user);
+        var createdUser = Repository.Add(user);
 
-        await repository.SaveChangesAsync();
+        await Repository.SaveChangesAsync();
 
         return Map(createdUser);
     }
 
     public Result<UserResponse> Get(Guid id)
     {
-        var currentUserId = userProvider.GetCurrentUserId();
+        var currentUserId = UserProvider.GetCurrentUserId();
         
         if (!currentUserId.Equals(id))
         {
             return Errors.UserUnauthorized(currentUserId);
         }
         
-        var nullableUser = repository.GetAll().SingleOrDefault(u => u.Id == id);
+        var nullableUser = Repository.GetAll().SingleOrDefault(u => u.Id == id);
 
         if (nullableUser is not UserEntity user)
         {
@@ -58,14 +58,14 @@ public class UserService(
 
     public async Task<Result<UserResponse>> Update(Guid id, UpdateUserRequest request)
     {
-        var currentUserId = userProvider.GetCurrentUserId();
+        var currentUserId = UserProvider.GetCurrentUserId();
         
         if (!currentUserId.Equals(id))
         {
             return Errors.UserUnauthorized(currentUserId);
         }
 
-        var nullableUser = repository.GetAll().SingleOrDefault(u => u.Id == id);
+        var nullableUser = Repository.GetAll().SingleOrDefault(u => u.Id == id);
 
         if (nullableUser is not UserEntity user)
         {
@@ -79,34 +79,34 @@ public class UserService(
 
         if (request.Password is string newPassword)
         {
-            var hashedPassword = passwordHasher.HashPassword(user, request.Password);
+            var hashedPassword = PasswordHasher.HashPassword(user, request.Password);
             user.Password = hashedPassword;
         }
 
-        var updatedUser = repository.Update(user);
-        await repository.SaveChangesAsync();
+        var updatedUser = Repository.Update(user);
+        await Repository.SaveChangesAsync();
 
         return Map(updatedUser);
     }
 
     public async Task<Result> Delete(Guid id)
     {
-        var currentUserId = userProvider.GetCurrentUserId();
+        var currentUserId = UserProvider.GetCurrentUserId();
 
         if (!currentUserId.Equals(id))
         {
             return Errors.UserUnauthorized(currentUserId);
         }
 
-        var nullableUser = repository.GetAll().SingleOrDefault(u => u.Id == id);
+        var nullableUser = Repository.GetAll().SingleOrDefault(u => u.Id == id);
 
         if (nullableUser is not UserEntity user)
         {
             return Errors.UserNotFound(id);
         }
 
-        repository.Delete(user);
-        await repository.SaveChangesAsync();
+        Repository.Delete(user);
+        await Repository.SaveChangesAsync();
 
         return Result.Success();
     }
